@@ -24,6 +24,10 @@ export type DrawerNavigatorConfig = {
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
 
+const defaultDrawerComponent = (props: *) => (
+  <DrawerLayout {...props} />
+)
+
 const defaultContentComponent = (props: *) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -48,6 +52,7 @@ const DefaultDrawerConfig = {
 
     return Math.min(smallerAxisSize - appBarHeight, maxWidth);
   },
+  drawerComponent: defaultDrawerComponent,
   contentComponent: defaultContentComponent,
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
@@ -63,6 +68,7 @@ const DrawerNavigator = (
     containerConfig,
     drawerWidth,
     drawerLockMode,
+    drawerComponent,
     contentComponent,
     contentOptions,
     drawerPosition,
@@ -109,6 +115,7 @@ const DrawerNavigator = (
       drawerLockMode={drawerLockMode}
       useNativeAnimations={useNativeAnimations}
       drawerWidth={drawerWidth}
+      drawerComponent={drawerComponent}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}

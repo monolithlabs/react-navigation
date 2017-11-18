@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { Dimensions } from 'react-native';
-import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
@@ -34,6 +33,7 @@ export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth?: number | (() => number),
   drawerPosition?: 'left' | 'right',
+  drawerComponent?: React.ComponentType<*>,
   contentComponent?: React.ComponentType<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
@@ -172,6 +172,11 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
   _drawer: any;
 
   render() {
+    const DrawerComponent = this.props.drawerComponent
+    if (!DrawerComponent) {
+      return null
+    }
+
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
@@ -187,7 +192,7 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
     );
 
     return (
-      <DrawerLayout
+      <DrawerComponent
         ref={(c: *) => {
           this._drawer = c;
         }}
@@ -201,17 +206,13 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
         onDrawerClose={this._handleDrawerClose}
         useNativeAnimations={this.props.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
-        drawerPosition={
-          this.props.drawerPosition === 'right'
-            ? DrawerLayout.positions.Right
-            : DrawerLayout.positions.Left
-        }
+        drawerPosition={this.props.drawerPosition}
       >
         <DrawerScreen
           screenProps={this.props.screenProps}
           navigation={this._screenNavigationProp}
         />
-      </DrawerLayout>
+      </DrawerComponent>
     );
   }
 }
